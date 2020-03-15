@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ExportFireData.BusinessLogic;
 
 namespace ExportFireData
 {
@@ -27,13 +28,18 @@ namespace ExportFireData
                 DirectoryInfo outputDir = ReadOutDir();
                 Console.WriteLine();
 
-                // Test, then exit or go again?
+                // Write out input
                 Console.WriteLine("Will get data from " + startingDate.Date + " until " + endingDate.Date);
                 Console.WriteLine("Will output Json in " + outputDir.FullName);
                 Console.WriteLine("");
+                Console.WriteLine("Press any key to extract data from the SF data repository.  Press Esc to restart.");
+                if (Console.ReadKey().Key == ConsoleKey.Escape)
+                    continue;
+                DataImportManager.GetData_SFRepo();
+
+                Console.WriteLine("");
                 Console.WriteLine("Press Esc to exit, Press any other key to go again.");
-                ConsoleKeyInfo command = Console.ReadKey();
-                if (command.Key == ConsoleKey.Escape)
+                if (Console.ReadKey().Key == ConsoleKey.Escape)
                     return;
                 Console.WriteLine("");
             }
