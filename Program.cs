@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using ExportFireData.BusinessLogic;
+using ExportFireData.BusinessObject;
 
 namespace ExportFireData
 {
@@ -39,9 +41,12 @@ namespace ExportFireData
                 Console.WriteLine("");
 
                 DataImportManager mgr = new DataImportManager(startingDate, endingDate);
-                mgr.GetData_SFRepo();
+                List<Response> responses = mgr.GetData_SFRepo();
 
+                Console.WriteLine("creating json output...");
                 Console.WriteLine("");
+                JsonOutput.WriteJsonFiles(outputDir, responses);
+
                 Console.WriteLine("Press Esc to exit, Press any other key to go again.");
                 if (Console.ReadKey().Key == ConsoleKey.Escape)
                     return;

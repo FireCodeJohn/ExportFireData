@@ -14,6 +14,7 @@ namespace ExportFireData.BusinessLogic
         DateTime StartingDate, EndingDate;
         Resource<Response> Dataset;
         List<Response> Responses;
+        bool searchFinished;
 
         public DataImportManager(DateTime startingDate, DateTime endingDate)
         {
@@ -21,11 +22,12 @@ namespace ExportFireData.BusinessLogic
             this.EndingDate = endingDate;
         }
 
-        public void GetData_SFRepo()
+        public List<Response> GetData_SFRepo()
         {
             //try
             // {
             this.Responses = new List<Response>();
+            this.searchFinished = false;
             var client = new SodaClient("https://data.sfgov.org", "U9X7wJc32iQgkkq4uOZN7poE7");
                 
             //var rows = client.Query<Response>(query, "nuek-vuh3");
@@ -48,6 +50,8 @@ namespace ExportFireData.BusinessLogic
                     Console.WriteLine(this.Responses[i].call_number);
                 }
             }
+            Console.WriteLine("");
+            return this.Responses;
             //}
             //catch(Exception e)
             // {
@@ -58,6 +62,7 @@ namespace ExportFireData.BusinessLogic
         public void GetAllRows()
         {
             ScanRowsForMatch(0, 6000000, 1000000);
+            Console.WriteLine("");
             /*while (rowCount < rowsToScan)
             {
                 var lastRow = this.Dataset.GetRows(1, rowCount + (scanWidth - 1));
@@ -91,9 +96,10 @@ namespace ExportFireData.BusinessLogic
 
         public void ScanRowsForMatch(int startRow, int endRow, int scanWidth)
         {
+            Console.WriteLine("Checking for matches in rows {0} - {1}...", startRow, endRow);
             int rowCount = startRow;
 
-            while (rowCount < endRow)
+            while (rowCount < endRow && !searchFinished)
             {
                 var lastRow = this.Dataset.GetRows(1, rowCount + (scanWidth-1));
                 if (lastRow.Count() == 1) // if not last row
@@ -102,7 +108,7 @@ namespace ExportFireData.BusinessLogic
                     DateTime.TryParse(lastRow.First().call_date, out lastDate);
                     if (DateTime.Compare(this.EndingDate, lastDate) < 0)
                     {
-                        Console.WriteLine("Checked rows {0} - {1}. {2} matches so far", rowCount, rowCount + (scanWidth - 1), this.Responses.Count);
+                        Console.WriteLine("No matches in rows {0} - {1}", rowCount, rowCount + (scanWidth - 1));
                         rowCount += scanWidth;
                         continue;
                     }
@@ -112,14 +118,15 @@ namespace ExportFireData.BusinessLogic
                 DateTime.TryParse(firstRow.First().call_date, out firstDate);
                 if (DateTime.Compare(firstDate, this.StartingDate) < 0)
                 {
-                    Console.WriteLine("Finished Searching rows {0} - {1}. {2} matches so far", startRow, endRow, this.Responses.Count);
-                    return;
+                    this.searchFinished = true;
+                    break;
                 }
 
                 if (scanWidth > 10000)
                 {
                     Console.WriteLine("Found matches between rows {0} and {1}", rowCount, rowCount + scanWidth);
                     ScanRowsForMatch(rowCount, rowCount + scanWidth, scanWidth / 10);
+                    //Console.WriteLine("Finished Searching rows {0} - {1}. {2} matches so far", rowCount, rowCount + scanWidth, this.Responses.Count);
                     rowCount += scanWidth;
                 }
                 else
@@ -130,6 +137,8 @@ namespace ExportFireData.BusinessLogic
                     rowCount += scanWidth;
                 }
             }
+
+            Console.WriteLine("Finished Searching rows {0} - {1}. {2} matches so far", startRow, endRow, this.Responses.Count);
         }
 
         public List<Response> filterDates(IEnumerable<Response> rows)
