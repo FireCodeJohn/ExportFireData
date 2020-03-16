@@ -31,7 +31,7 @@ namespace ExportFireData
                 Console.WriteLine();
 
                 // Write out input
-                Console.WriteLine("Will get data from " + startingDate.Date + " until " + endingDate.Date);
+                Console.WriteLine("Will get data from {0}/{1}/{2} until {3}/{4}/{5}", startingDate.Month, startingDate.Day, startingDate.Year, endingDate.Month, endingDate.Day, endingDate.Year);
                 Console.WriteLine("Will output Json in " + outputDir.FullName);
                 Console.WriteLine("");
                 Console.WriteLine("Press any key to extract data from the SF data repository. Press Esc to restart.");
@@ -42,11 +42,15 @@ namespace ExportFireData
 
                 DataImportManager mgr = new DataImportManager(startingDate, endingDate);
                 List<Response> responses = mgr.GetData_SFRepo();
+                if (responses == null)
+                    continue;
 
+                Console.WriteLine("");
                 Console.WriteLine("creating json output...");
                 Console.WriteLine("");
                 JsonOutput.WriteJsonFiles(outputDir, responses);
 
+                Console.WriteLine("");
                 Console.WriteLine("Press Esc to exit, Press any other key to go again.");
                 if (Console.ReadKey().Key == ConsoleKey.Escape)
                     return;

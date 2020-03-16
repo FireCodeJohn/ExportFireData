@@ -10,12 +10,23 @@ namespace ExportFireData.BusinessLogic
     {
         public static void WriteJsonFiles(DirectoryInfo dir, List<Response> responses)
         {
+            int count = 0;
             foreach (Response response in responses)
             {
                 string path = dir.FullName + "\\" + "call_" + response.call_number + ".json";
                 string contents = CreateContents(response);
+
+                int pathNum = 2;
+                while (File.Exists(path))
+                {
+                    path = dir.FullName + "\\" + "call_" + response.call_number + "_" + pathNum + ".json";
+                    pathNum++;
+                }
+
                 File.WriteAllText(path, contents);
+                count++;
             }
+            Console.WriteLine("Wrote JSON files for {0} Responses", count);
         }
 
         public static string CreateContents(Response res)

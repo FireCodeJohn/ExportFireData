@@ -24,39 +24,43 @@ namespace ExportFireData.BusinessLogic
 
         public List<Response> GetData_SFRepo()
         {
-            //try
-            // {
-            this.Responses = new List<Response>();
-            this.searchFinished = false;
-            var client = new SodaClient("https://data.sfgov.org", "U9X7wJc32iQgkkq4uOZN7poE7");
+            try
+            {
+                this.Responses = new List<Response>();
+                this.searchFinished = false;
+                var client = new SodaClient("https://data.sfgov.org", "U9X7wJc32iQgkkq4uOZN7poE7");
                 
-            //var rows = client.Query<Response>(query, "nuek-vuh3");
-            this.Dataset = client.GetResource<Response>("nuek-vuh3");
+                //var rows = client.Query<Response>(query, "nuek-vuh3");
+                this.Dataset = client.GetResource<Response>("nuek-vuh3");
 
-            //var results = QueryDataset(dataset);
-            // Resource objects read their own data
+                //var results = QueryDataset(dataset);
+                // Resource objects read their own data
             
 
-            //var rows = dataset.GetRows(limit: 5000).Where(isRespWithinDates);
-            //List<Response> filteredRows = filterDates(rows);
-            GetAllRows();
+                //var rows = dataset.GetRows(limit: 5000).Where(isRespWithinDates);
+                //List<Response> filteredRows = filterDates(rows);
+                GetAllRows();
 
-            Console.WriteLine("Got {0} results. Dumping first 10 results:", this.Responses.Count());
-            //Console.WriteLine("Got results");
-            if (this.Responses.Count >= 10)
-            {
-                for (int i = 0; i < 10; i++)
+                Console.WriteLine("Got {0} results. Dumping first 10 results:", this.Responses.Count());
+                //Console.WriteLine("Got results");
+                if (this.Responses.Count >= 10)
                 {
-                    Console.WriteLine(this.Responses[i].call_number);
+                    for (int i = 0; i < 10; i++)
+                    {
+                        Console.WriteLine(this.Responses[i].call_number);
+                    }
                 }
+                Console.WriteLine("");
+                return this.Responses;
             }
-            Console.WriteLine("");
-            return this.Responses;
-            //}
-            //catch(Exception e)
-            // {
-            //    Console.WriteLine(e.Message);
-            // }
+            catch(Exception e)
+            {
+                Console.WriteLine("Error Encountered Getting Data");
+                Console.WriteLine(e.Message);
+                Console.WriteLine("");
+                Console.WriteLine("");
+                return null;
+            }
         }
 
         public void GetAllRows()
