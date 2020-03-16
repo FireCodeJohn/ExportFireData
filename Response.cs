@@ -39,13 +39,13 @@ namespace ExportFireData.BusinessObject
         public string fire_prevention_district { get; set; } // 30
         public string supervisor_district { get; set; }
         public string neighborhoods_analysis_boundaries { get; set; }
-        public MyPoint location { get; set; }
+        public Location location { get; set; }
         public string rowid { get; set; } // 34
     }
 
-    public class MyPoint
+    public class Location
     {
-        public string type { get; set; }
-        public double[] coordinates { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
     }
 }

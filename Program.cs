@@ -32,10 +32,14 @@ namespace ExportFireData
                 Console.WriteLine("Will get data from " + startingDate.Date + " until " + endingDate.Date);
                 Console.WriteLine("Will output Json in " + outputDir.FullName);
                 Console.WriteLine("");
-                Console.WriteLine("Press any key to extract data from the SF data repository.  Press Esc to restart.");
+                Console.WriteLine("Press any key to extract data from the SF data repository. Press Esc to restart.");
                 if (Console.ReadKey().Key == ConsoleKey.Escape)
                     continue;
-                DataImportManager.GetData_SFRepo();
+                Console.WriteLine("Extracting...");
+                Console.WriteLine("");
+
+                DataImportManager mgr = new DataImportManager(startingDate, endingDate);
+                mgr.GetData_SFRepo();
 
                 Console.WriteLine("");
                 Console.WriteLine("Press Esc to exit, Press any other key to go again.");
