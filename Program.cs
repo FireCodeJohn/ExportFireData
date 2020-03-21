@@ -42,7 +42,7 @@ namespace ExportFireData
 
                 DataImportManager mgr = new DataImportManager(startingDate, endingDate);
                 //List<Response> responses = mgr.GetData_SFRepo();
-                List<Response> responses = mgr.GetData_SFRepo_Https(startingDate, endingDate);
+                List<Response> responses = mgr.GetData_SFRepo_Https(startingDate, endingDate, 0);
                 //Console.WriteLine(response);
                 if (responses == null)
                     continue;

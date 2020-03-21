@@ -24,15 +24,19 @@ namespace ExportFireData.BusinessLogic
             this.EndingDate = endingDate;
         }
 
-        public List<Response> GetData_SFRepo_Https(DateTime startTime, DateTime endTime)
+        public List<Response> GetData_SFRepo_Https(DateTime startTime, DateTime endTime, int offset)
         {
+            int limit = 50000;
             string startStamp = string.Format("{0}-{1}-{2}T00:00:00.000", startTime.Year, startTime.Month, startTime.Day);
             string endStamp = string.Format("{0}-{1}-{2}T00:00:00.000", endTime.Year, endTime.Month, endTime.Day);
 
-            string url = string.Format("https://data.sfgov.org/resource/nuek-vuh3.json?$where=call_date >= \"{0}\" AND call_date <= \"{1}\"", startStamp, endStamp);
+            string url = string.Format("https://data.sfgov.org/resource/nuek-vuh3.json?$where=call_date >= \"{0}\" AND call_date <= \"{1}\"&$limit={2}&$offset={3}", startStamp, endStamp, limit, offset);
             Console.WriteLine("HTTPS Get Request: " + url);
+            Console.WriteLine("");
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers["X-App-Token"] = "U9X7wJc32iQgkkq4uOZN7poE7";
+            request.Headers["X-Content-Length"] = "54138";
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream resStream = response.GetResponseStream();
             string responseBody;
@@ -42,7 +46,12 @@ namespace ExportFireData.BusinessLogic
                 responseBody = streamReader.ReadToEnd();
             }
 
-            var responseList = JsonConvert.DeserializeObject<List<Response>>(responseBody);
+            List<Response> responseList = JsonConvert.DeserializeObject<List<Response>>(responseBody);
+
+            if (responseList.Count == limit)
+            {
+                responseList.AddRange(GetData_SFRepo_Https(startTime, endTime, offset + limit));
+            }
 
             return responseList;
         }
