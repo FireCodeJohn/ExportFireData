@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Data;
+using System.IO;
+using System.Net;
 using SODA;
 using Newtonsoft.Json;
 using ExportFireData.BusinessObject;
@@ -22,80 +24,73 @@ namespace ExportFireData.BusinessLogic
             this.EndingDate = endingDate;
         }
 
+        public List<Response> GetData_SFRepo_Https(DateTime startTime, DateTime endTime)
+        {
+            string startStamp = string.Format("{0}-{1}-{2}T00:00:00.000", startTime.Year, startTime.Month, startTime.Day);
+            string endStamp = string.Format("{0}-{1}-{2}T00:00:00.000", endTime.Year, endTime.Month, endTime.Day);
+
+            string url = string.Format("https://data.sfgov.org/resource/nuek-vuh3.json?$where=call_date >= \"{0}\" AND call_date <= \"{1}\"", startStamp, endStamp);
+            Console.WriteLine("HTTPS Get Request: " + url);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream resStream = response.GetResponseStream();
+            string responseBody;
+
+            using (StreamReader streamReader = new StreamReader(resStream))
+            {
+                responseBody = streamReader.ReadToEnd();
+            }
+
+            var responseList = JsonConvert.DeserializeObject<List<Response>>(responseBody);
+
+            return responseList;
+        }
+
         public List<Response> GetData_SFRepo()
         {
-            try
-            {
+            //try
+            //{
                 this.Responses = new List<Response>();
                 this.searchFinished = false;
                 var client = new SodaClient("https://data.sfgov.org", "U9X7wJc32iQgkkq4uOZN7poE7");
-                
-                //var rows = client.Query<Response>(query, "nuek-vuh3");
-                this.Dataset = client.GetResource<Response>("nuek-vuh3");
 
-                //var results = QueryDataset(dataset);
-                // Resource objects read their own data
+            //this.Dataset = client.GetResource<Response>("nuek-vuh3");
+            var resource = client.GetResource<Dictionary<string, object>>("nuek-vuh3");
+
+            var soql = new SoqlQuery().Select("call_number").Where("call_number > 200752870");
             
+            var results = resource.Query(soql);
 
-                //var rows = dataset.GetRows(limit: 5000).Where(isRespWithinDates);
-                //List<Response> filteredRows = filterDates(rows);
-                GetAllRows();
+            //GetAllRows();
+            //var rows = resource.GetRows(1000);
 
-                Console.WriteLine("Got {0} results. Dumping first 10 results:", this.Responses.Count());
-                //Console.WriteLine("Got results");
-                if (this.Responses.Count >= 10)
+                Console.WriteLine("Got {0} results. Dumping first 10 results:", results.Count());
+            /*List<Dictionary<string, object>> list = results.ToList();
+                if (list.Count() >= 10)
                 {
                     for (int i = 0; i < 10; i++)
                     {
-                        Console.WriteLine(this.Responses[i].call_number);
+                        Console.WriteLine(list[i]["call_number"]);
                     }
                 }
-                Console.WriteLine("");
+                Console.WriteLine("");*/
                 return this.Responses;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Error Encountered Getting Data");
-                Console.WriteLine(e.Message);
-                Console.WriteLine("");
-                Console.WriteLine("");
-                return null;
-            }
+            //}
+            //catch(Exception e)
+            //{
+             //   Console.WriteLine("Error Encountered Getting Data");
+              //  Console.WriteLine(e.Message);
+               // Console.WriteLine("");
+                //Console.WriteLine("");
+                //return null;
+           // }
         }
 
         public void GetAllRows()
         {
             ScanRowsForMatch(0, 6000000, 1000000);
             Console.WriteLine("");
-            /*while (rowCount < rowsToScan)
-            {
-                var lastRow = this.Dataset.GetRows(1, rowCount + (scanWidth - 1));
-                if (lastRow.Count() == 1) // if not last row
-                {
-                    DateTime firstDate, lastDate;                   
-                    DateTime.TryParse(lastRow.First().call_date, out lastDate);
-                    if (DateTime.Compare(this.EndingDate, lastDate) < 0)
-                    {
-                        Console.WriteLine("Checked rows {0} - {1}. {2} matches so far", rowCount, rowCount + (scanWidth - 1), responses.Count);
-                        rowCount += scanWidth;
-                        continue;
-                    }
-
-                    var firstRow = this.Dataset.GetRows(1, rowCount);
-                    DateTime.TryParse(firstRow.First().call_date, out firstDate);
-                    if (DateTime.Compare(firstDate, this.StartingDate) < 0)
-                    {
-                        Console.WriteLine("Finished Searching...");
-                        return responses;
-                    }
-                }
-
-                var rows = this.Dataset.GetRows(scanWidth, rowCount).Where(isRespWithinDates);
-                responses.AddRange(rows);
-                Console.WriteLine("Checked rows {0} - {1}. {2} matches so far", rowCount, rowCount + (scanWidth - 1), responses.Count);
-                rowCount += scanWidth;
-            }
-            return responses;*/
         }
 
         public void ScanRowsForMatch(int startRow, int endRow, int scanWidth)

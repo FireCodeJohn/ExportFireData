@@ -41,10 +41,14 @@ namespace ExportFireData
                 Console.WriteLine("");
 
                 DataImportManager mgr = new DataImportManager(startingDate, endingDate);
-                List<Response> responses = mgr.GetData_SFRepo();
+                //List<Response> responses = mgr.GetData_SFRepo();
+                List<Response> responses = mgr.GetData_SFRepo_Https(startingDate, endingDate);
+                //Console.WriteLine(response);
                 if (responses == null)
                     continue;
 
+                Console.WriteLine("");
+                Console.WriteLine("Found {0} Results", responses.Count);
                 Console.WriteLine("");
                 Console.WriteLine("creating json output...");
                 Console.WriteLine("");
