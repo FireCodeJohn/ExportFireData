@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GeoJSON.Net.Geometry;
-
-namespace ExportFireData.BusinessObject
+﻿namespace ExportFireData.BusinessObject
 {
     public class Response
     {
@@ -42,6 +37,11 @@ namespace ExportFireData.BusinessObject
         public Location location { get; set; }
         public string rowid { get; set; } // 34
     }
+
+    /*public class TestResponse
+    {
+        public string call_number { get; set; }
+    }*/
 
     public class Location
     {

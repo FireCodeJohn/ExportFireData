@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Data;
 using System.IO;
 using System.Net;
-using SODA;
 using Newtonsoft.Json;
 using ExportFireData.BusinessObject;
 
@@ -13,7 +9,7 @@ namespace ExportFireData.BusinessLogic
 {
     public class DataImportManager
     {
-        DateTime StartingDate, EndingDate;
+        /*DateTime StartingDate, EndingDate;
         Resource<Response> Dataset;
         List<Response> Responses;
         bool searchFinished;
@@ -22,9 +18,9 @@ namespace ExportFireData.BusinessLogic
         {
             this.StartingDate = startingDate;
             this.EndingDate = endingDate;
-        }
+        }*/
 
-        public List<Response> GetData_SFRepo_Https(DateTime startTime, DateTime endTime, int offset)
+        public static List<Response> GetData_SFRepo_Https(DateTime startTime, DateTime endTime, int offset)
         {
             int limit = 50000;
             string startStamp = string.Format("{0}-{1}-{2}T00:00:00.000", startTime.Year, startTime.Month, startTime.Day);
@@ -56,7 +52,7 @@ namespace ExportFireData.BusinessLogic
             return responseList;
         }
 
-        public List<Response> GetData_SFRepo()
+        /*public List<Response> GetData_SFRepo()
         {
             //try
             //{
@@ -83,7 +79,7 @@ namespace ExportFireData.BusinessLogic
                         Console.WriteLine(list[i]["call_number"]);
                     }
                 }
-                Console.WriteLine("");*/
+                Console.WriteLine("");**
                 return this.Responses;
             //}
             //catch(Exception e)
@@ -178,6 +174,6 @@ namespace ExportFireData.BusinessLogic
 
             var results = dataset.Query(soql);
             return results;
-        }
+        }*/
     }
 }

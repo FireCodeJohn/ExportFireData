@@ -16,12 +16,12 @@ namespace ExportFireData
                 Console.WriteLine("");
 
                 // Get starting date
-                Console.WriteLine("Enter a starting date: ");
+                Console.WriteLine("Enter a starting date (inclusive): ");
                 DateTime startingDate = ReadDate();
                 Console.WriteLine("");
 
                 // Get ending Date
-                Console.WriteLine("Enter an ending date: ");
+                Console.WriteLine("Enter an ending date (inclusive): ");
                 DateTime endingDate = ReadDate();
                 Console.WriteLine("");
 
@@ -40,12 +40,13 @@ namespace ExportFireData
                 Console.WriteLine("Extracting...");
                 Console.WriteLine("");
 
-                DataImportManager mgr = new DataImportManager(startingDate, endingDate);
-                //List<Response> responses = mgr.GetData_SFRepo();
-                List<Response> responses = mgr.GetData_SFRepo_Https(startingDate, endingDate, 0);
-                //Console.WriteLine(response);
+                List<Response> responses = DataImportManager.GetData_SFRepo_Https(startingDate, endingDate, 0);
                 if (responses == null)
+                {
+                    Console.WriteLine("Got null response.  Try again...");
+                    Console.WriteLine("");
                     continue;
+                }
 
                 Console.WriteLine("");
                 Console.WriteLine("Found {0} Results", responses.Count);

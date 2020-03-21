@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using ExportFireData.BusinessObject;
 
@@ -25,8 +24,14 @@ namespace ExportFireData.BusinessLogic
 
                 File.WriteAllText(path, contents);
                 count++;
+
+                if (count % 10000 == 0)
+                {
+                    Console.WriteLine("Wrote {0} JSON files so far...", count);
+                    Console.WriteLine("");
+                }
             }
-            Console.WriteLine("Wrote JSON files for {0} Responses", count);
+            Console.WriteLine("Wrote all JSON files for {0} Responses", count);
         }
 
         public static string CreateContents(Response res)
