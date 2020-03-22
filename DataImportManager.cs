@@ -32,7 +32,6 @@ namespace ExportFireData.BusinessLogic
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Headers["X-App-Token"] = "U9X7wJc32iQgkkq4uOZN7poE7";
-            request.Headers["X-Content-Length"] = "54138";
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream resStream = response.GetResponseStream();
             string responseBody;

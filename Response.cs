@@ -37,15 +37,8 @@
         public Location location { get; set; }
         public string rowid { get; set; } // 34
     }
-
     /*public class TestResponse
     {
         public string call_number { get; set; }
     }*/
-
-    public class Location
-    {
-        public string latitude { get; set; }
-        public string longitude { get; set; }
-    }
 }
