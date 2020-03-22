@@ -149,6 +149,9 @@ namespace ExportFireData.BusinessLogic
 
         public static string CreateLocationString(Location loc, string indentProps, string indentLocProps)
         {
+            if (loc.human_address == null)
+                loc.human_address = "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}";
+
             string human_address_escaped = loc.human_address.Replace("\"", "\\\"");
 
             string contents = indentProps + "\"location\":{" + Environment.NewLine;
