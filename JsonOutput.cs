@@ -20,13 +20,15 @@ namespace ExportFireData.BusinessLogic
             int count = 0;
             foreach (Response response in responses)
             {
-                string path = dir.FullName + "\\" + "call_" + response.call_number + ".json";
+                //string path = dir.FullName + "\\" + "call_" + response.call_number + ".json";
+                string path = Path.Combine(dir.FullName, "call_" + response.call_number + ".json");
                 string contents = CreateContents(response, respInc);
 
                 int pathNum = 2;
                 while (File.Exists(path))
                 {
-                    path = dir.FullName + "\\" + "call_" + response.call_number + "_" + pathNum + ".json";
+                    //path = dir.FullName + "\\" + "call_" + response.call_number + "_" + pathNum + ".json";
+                    path = Path.Combine(dir.FullName, "call_" + response.call_number + "_" + pathNum + ".json");
                     pathNum++;
                 }
 
@@ -49,7 +51,8 @@ namespace ExportFireData.BusinessLogic
             List<string> allFilePaths = new List<string>();
             foreach (Response response in responses)
             {
-                string path = dir.FullName + "\\" + "incident_" + response.incident_number + ".json";
+                //string path = dir.FullName + "\\" + "incident_" + response.incident_number + ".json";
+                string path = Path.Combine(dir.FullName, "incident_" + response.incident_number + ".json");
                 string rowContents = CreateContents(response, respInc); // Creates content for just the row in the data.
 
                 if (File.Exists(path)) // if the file exists, add the rowContents to the file
