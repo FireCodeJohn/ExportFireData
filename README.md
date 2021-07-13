@@ -1,4 +1,4 @@
-NOTE: This project was created in early 2020, and was the first time I used Github.  I couldn't figure out how folders worked at the time and that is why everything is in the root directory.  ew.  In my other project I uploaded tonight 7/12 (the simple game), you can see that the project is properly structured.  
+NOTE: This project was created in early 2020, and was the first time I used Github.  I couldn't figure out how folders worked at the time and that is why everything is in the root directory.  gross, ew.  In my other project I uploaded tonight 7/12 (the simple game), you can see that the project is properly structured.  
 
 To run on Windows: Download the ZIP, extract all, and run the executable. 
 
